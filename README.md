@@ -43,4 +43,4 @@ Presenting, the lazy man’s radio. An inexpensive and modern alternative to tod
 
 ### Discussion
 
-### [Code](github.com/sujayt123)
+### [Code](https://github.com/sujayt123/lazy-radio-station)
