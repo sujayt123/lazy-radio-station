@@ -42,16 +42,24 @@ After carefully taking into consideration the limitations of the MSP430 microcon
 * a way to interface with the soundboard
 * a way to interface with the LCD
 * a way to interface with a motion sensor
+
 We'll discuss each of these in detail, from initial conception to final execution.
 ###### Soundboard 
+We purchased Adafruit's Audio FX soundboard because of its low cost and simplicity. The ability to customize song choices and trigger modes of the soundboard was the deciding factor in the purchase.
+
+The soundboard has up to 11 pins (with built-in pull-up resistors) that can be driven low to play the corresponding song mapped to that pin. The song mapping is specified by the consumer via the particular naming scheme of the songs on the filesystem of the soundboard. 
+
+Pretty easy, right? All you have to do to trigger a song to play is to drive the input into some pin low. For the embedded systems programmer, however, this mechanism seems rather insidious - at first glance, it necessitates the usage of 11 MSP430 GPIO pins to drive the soundboard. Thankfully, this difficulty can be circumvented with some shrewdness. 
+
+We initially decided to use 1-cold decoder to allow a system of up to 16 pins to be controlled with only 4 GPIOs of the MSP430. However, to avoid potential timing issues with GPIO management, we ended up going with the sequential logic equivalent of the combinational 1-cold decoder: the 74HC595 shift register. With only three GPIOs of the MSP430, we could control up to eight pins of the soundboard (and potentially more, if we were willing to daisy-chain multiple 74HC595s). Provided support for the 74HC595, which comes pre-packaged in the Energia Sidekick kit, was incredibly useful for MSP430 programming.
 
 ###### LCD
-We purchased a 16x2 HD44780 LCD screen from Adafruit for this project because of its popularity among hobbyists and general community support. Initially, we tried to be extremely conservative about the GPIO usage and opted to purchase an SPI/I2C backpack, a hardware controller that wraps around the LCD to give a much more convenient interface to the embedded programmer. The backpack would only require three to four pins to communicate with the LCD, as opposed to the traditional six or seven! 
+We purchased a 16x2 HD44780 LCD screen from Adafruit for this project because of its popularity among hobbyists and general community support. Initially, we tried to be extremely conservative about the GPIO usage and opted to purchase an SPI/I2C backpack, a hardware controller that wraps around the LCD to give a much more convenient interface to the embedded programmer. The backpack would only require three to four pins to communicate with the LCD, as opposed to the traditional six or seven!
 
 Unfortunately, the extant MSP430 support for the backpack was rather limited. Device drivers for the Arduino were available on Adafruit's websites, but after several hours of trying to port the provided C++ code into the MSP430-flavored C, we gave up and transitioned to the standard interface with the LCD. Thanks to the clever aspects of the rest of our design, we were able to easily support the GPIO requirements of the LCD interface.
 
 Let's briefly outline the hardware interface of the LCD screen to learn more about the LCD screen.
-* RS pin: indicates whether the byte transferred is a command to the MPU or writable data
+* RS pin: indicates whether the byte transferred is a special command to the MPU or standard writable data
 * RW pin: read/write mode. Pulled to ground to signal write-only.
 * E  pin: enable pin. Starts data write.
 * DB4 to DB7: one half of the byte to transfer.
