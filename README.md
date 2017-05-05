@@ -8,6 +8,8 @@ Presenting, the lazy man’s radio. An inexpensive and modern alternative to tod
 
 ### [Demo Video](https://www.youtube.com/watch?v=JdD40mU05lw)
 
+### [Code](https://github.com/sujayt123/lazy-radio-station)
+
 ### Features
 
 * An LCD screen to display information about the current track
@@ -31,10 +33,10 @@ Presenting, the lazy man’s radio. An inexpensive and modern alternative to tod
  * [5V/1A USB power supply](https://www.amazon.com/Jackery-Premium-3350mAh-Portable-Charger/dp/B00L9F95RO/ref=zg_bs_7073960011_15?_encoding=UTF8&psc=1&refRID=KQ9980D06M4S5FD3NESW) to power the speaker and soundboard
  * [Speaker](https://www.sparkfun.com/products/14023) to emit the audio output of the system
 
-### [Schematic](https://google.com)
+### Schematic
 
-### [Circuit](https://sujayt123.github.io/lazy-radio-station/circuit.jpeg)
-
+### Circuit 
+![Circuit implementation](circuit.jpeg "Circuit implementation")
 
 ### Architecture
 ##### Hardware
@@ -71,7 +73,43 @@ The LCD expects a few initialization commands, according to pages 45 and 46 of t
 We initially purchased a flight-sensor to get accurate readings of detected objects in the vicinity of the sensor. With its i2c compatibility, the sensor appeared to be an easy way to detect if an object was in range to trigger the next song. However, i2c on the MSP430 proved to be insurmountably difficult given our time constraints and we turned our attention to another product: the PIR motion sensor. While the PIR was ostensibly less accurate and only relayed 1 bit of information ("Did I detect motion or not?"), it was much easier to use in conjunction with everything else in our system. By tuning its sensitivity dial, we configured it to work well in its environment.
 
 ##### Software
+We incorporated open-source device drivers from TI and Kevin Lin to interface from a high-level with the shift register and MSP430, respectively. In our main program, we poll the switchbutton and PIR, cycling to the next song if the input indicates to do so. In the future, we would consider using interrupts to drive these trigger abilities, but we didn't have enough time to organize the architecture around them in time for the deadline. A snippet of the polling logic is provided below.
 
-### Discussion
+```c
+int main(void) {
+  ...
+  lcd_init(0); // Initialize the LCD screen
+  lcd_clear_all();
+  lcd_display_string(0, descriptions[0]);
 
-### [Code](https://github.com/sujayt123/lazy-radio-station)
+  ...
+
+  int i = 0;
+  int pirState = 0;
+  shiftOut(~(1 << i)); // Play the first track
+
+  while (1) {
+    if (!(P1IN & BIT1)) // Prioritize button press over motion
+    {
+      shiftOut(~(1 << i)); // Trigger the current song
+      lcd_clear_all();
+      lcd_display_string(0, descriptions[i]); // Display the current song 
+      __delay_cycles(500000); // Allow the switch to debounce
+      i = (i + 1) % 8; // Identify the next song to play    
+    } else if (P1IN & BIT2) // The IR sensor output is high
+    {
+      if (pirState == 0) // Only trigger on the "rising edge" of the output
+      {
+        shiftOut(~(1 << i));
+        lcd_clear_all();
+        lcd_display_string(0, descriptions[i]);
+        __delay_cycles(500000);
+        i = (i + 1) % 8;
+        pirState = 1;
+      }
+    } else {
+      pirState = 0;
+    }
+  }
+}
+```
