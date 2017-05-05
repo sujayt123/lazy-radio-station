@@ -6,14 +6,14 @@ That’s where we come in!
 
 Presenting, the lazy man’s radio. An inexpensive and modern alternative to today’s music players. Simply wave your hand in front of the sensor to trigger a “skip” to the next song! Our music player features all the standard capabilities of its contemporaries for a fraction of the price.
 
-### [Demo](https://www.youtube.com/watch?v=JdD40mU05lw)
+### [Demo Video](https://www.youtube.com/watch?v=JdD40mU05lw)
 
 ### Features
 
 * An LCD screen to display information about the current track
 * A PIR sensor to detect motion and subsequently trigger the next track
 * A pushbutton that also allows you to cycle through tracks
-* A pretty LED display to further indicate which track is on
+* A pretty LED array to further indicate which track is on
 * A shift register to configure the means of flipping tracks
   * Modify and reprogram the system to skip one, two or more tracks per motion
   * Reorder the order in which to visit songs on the soundboard
@@ -31,7 +31,7 @@ Presenting, the lazy man’s radio. An inexpensive and modern alternative to tod
  * [5V/1A USB power supply](https://www.amazon.com/Jackery-Premium-3350mAh-Portable-Charger/dp/B00L9F95RO/ref=zg_bs_7073960011_15?_encoding=UTF8&psc=1&refRID=KQ9980D06M4S5FD3NESW) to power the speaker and soundboard
  * [Speaker](https://www.sparkfun.com/products/14023) to emit the audio output of the system
 
-### Schematic
+### [Schematic](https://google.com)
 
 ### [Circuit](https://sujayt123.github.io/lazy-radio-station/circuit.jpeg)
 
@@ -51,7 +51,7 @@ The soundboard has up to 11 pins (with built-in pull-up resistors) that can be d
 
 Pretty easy, right? All you have to do to trigger a song to play is to drive the input into some pin low. For the embedded systems programmer, however, this mechanism seems rather insidious - at first glance, it necessitates the usage of 11 MSP430 GPIO pins to drive the soundboard. Thankfully, this difficulty can be circumvented with some shrewdness. 
 
-We initially decided to use 1-cold decoder to allow a system of up to 16 pins to be controlled with only 4 GPIOs of the MSP430. However, to avoid potential timing issues with GPIO management, we ended up going with the sequential logic equivalent of the combinational 1-cold decoder: the 74HC595 shift register. With only three GPIOs of the MSP430, we could control up to eight pins of the soundboard (and potentially more, if we were willing to daisy-chain multiple 74HC595s). Provided support for the 74HC595, which comes pre-packaged in the Energia Sidekick kit, was incredibly useful for MSP430 programming.
+We initially decided to use 1-cold decoder to allow a system of up to 16 pins to be controlled with only 4 GPIOs of the MSP430. However, to avoid potential timing issues with GPIO management, we ended up going with the sequential logic equivalent of the combinational 1-cold decoder: the 74HC595 shift register. With only three GPIOs of the MSP430, we could control up to eight pins of the soundboard - and potentially more, if we were willing to daisy-chain multiple 74HC595s - using the specified protocol for serial communication. Provided support for the 74HC595, which comes pre-packaged in the Energia Sidekick kit, was incredibly helpful when we were programming the MSP430.
 
 ###### LCD
 We purchased a 16x2 HD44780 LCD screen from Adafruit for this project because of its popularity among hobbyists and general community support. Initially, we tried to be extremely conservative about the GPIO usage and opted to purchase an SPI/I2C backpack, a hardware controller that wraps around the LCD to give a much more convenient interface to the embedded programmer. The backpack would only require three to four pins to communicate with the LCD, as opposed to the traditional six or seven!
@@ -68,6 +68,7 @@ Let's briefly outline the hardware interface of the LCD screen to learn more abo
 The LCD expects a few initialization commands, according to pages 45 and 46 of the [HD44780 specification manual](https://www.sparkfun.com/datasheets/LCD/HD44780.pdf). Once the LCD is configured, it can process instructions in the form of bytes - transferred as two sets of 4 bits in 4-bit mode - that are decoded with respect to RS, RW and the actual value of the byte itself. We incorporated Kevin Lin's LCD device driver to communicate with the device using a more high-level software interface.
 
 ###### Motion sensor 
+We initially purchased a flight-sensor to get accurate readings of detected objects in the vicinity of the sensor. With its i2c compatibility, the sensor appeared to be an easy way to detect if an object was in range to trigger the next song. However, i2c on the MSP430 proved to be insurmountably difficult given our time constraints and we turned our attention to another product: the PIR motion sensor. While the PIR was ostensibly less accurate and only relayed 1 bit of information ("Did I detect motion or not?"), it was much easier to use in conjunction with everything else in our system. By tuning its sensitivity dial, we configured it to work well in its environment.
 
 ##### Software
 
