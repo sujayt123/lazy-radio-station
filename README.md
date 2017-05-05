@@ -34,6 +34,7 @@ Presenting, the lazy man’s radio. An inexpensive and modern alternative to tod
  * [Speaker](https://www.sparkfun.com/products/14023) to emit the audio output of the system
 
 ### Schematic
+![Circuit schematic](modifiedradio.jpg "Circuit schematic")
 
 ### Circuit 
 ![Circuit implementation](circuit.png "Circuit implementation")

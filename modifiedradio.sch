@@ -7329,6 +7329,7 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <part name="P+3" library="supply1" deviceset="+5V" device=""/>
 <part name="P+4" library="supply1" deviceset="+5V" device=""/>
 <part name="GND9" library="supply1" deviceset="GND" device=""/>
+<part name="GND10" library="supply1" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -7369,6 +7370,7 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <instance part="P+3" gate="1" x="73.66" y="114.3"/>
 <instance part="P+4" gate="1" x="76.2" y="99.06"/>
 <instance part="GND9" gate="1" x="83.82" y="101.6"/>
+<instance part="GND10" gate="1" x="-17.78" y="33.02"/>
 </instances>
 <busses>
 </busses>
@@ -7477,6 +7479,11 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <pinref part="R1" gate="G$1" pin="E"/>
 <wire x1="38.1" y1="63.5" x2="38.1" y2="73.66" width="0.1524" layer="91"/>
 <label x="38.1" y="71.12" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="DIS1" gate="G$1" pin="R/W"/>
+<pinref part="GND10" gate="1" pin="GND"/>
+<wire x1="-17.78" y1="48.26" x2="-17.78" y2="35.56" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="VPOT" class="0">
