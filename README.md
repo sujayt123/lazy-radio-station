@@ -38,6 +38,28 @@ Presenting, the lazy man’s radio. An inexpensive and modern alternative to tod
 
 ### Architecture
 ##### Hardware
+After carefully taking into consideration the limitations of the MSP430 microcontroller, our group began to discuss which parts we would incorporate into our project. We knew that at the very least, we'd need the following:
+* a way to interface with the soundboard
+* a way to interface with the LCD
+* a way to interface with a motion sensor
+We'll discuss each of these in detail, from initial conception to final execution.
+###### Soundboard 
+
+###### LCD
+We purchased a 16x2 HD44780 LCD screen from Adafruit for this project because of its popularity among hobbyists and general community support. Initially, we tried to be extremely conservative about the GPIO usage and opted to purchase an SPI/I2C backpack, a hardware controller that wraps around the LCD to give a much more convenient interface to the embedded programmer. The backpack would only require three to four pins to communicate with the LCD, as opposed to the traditional six or seven! 
+
+Unfortunately, the extant MSP430 support for the backpack was rather limited. Device drivers for the Arduino were available on Adafruit's websites, but after several hours of trying to port the provided C++ code into the MSP430-flavored C, we gave up and transitioned to the standard interface with the LCD. Thanks to the clever aspects of the rest of our design, we were able to easily support the GPIO requirements of the LCD interface.
+
+Let's briefly outline the hardware interface of the LCD screen to learn more about the LCD screen.
+* RS pin: indicates whether the byte transferred is a command to the MPU or writable data
+* RW pin: read/write mode. Pulled to ground to signal write-only.
+* E  pin: enable pin. Starts data write.
+* DB4 to DB7: one half of the byte to transfer.
+* DB0 to DB3: unused in 4-bit mode. We use 4 bit mode to save GPIO pins.
+
+The LCD expects a few initialization commands, according to pages 45 and 46 of the [HD44780 specification manual](https://www.sparkfun.com/datasheets/LCD/HD44780.pdf). Once the LCD is configured, it can process instructions in the form of bytes - transferred as two sets of 4 bits in 4-bit mode - that are decoded with respect to RS, RW and the actual value of the byte itself. We incorporated Kevin Lin's LCD device driver to communicate with the device using a more high-level software interface.
+
+###### Motion sensor 
 
 ##### Software
 
