@@ -36,7 +36,7 @@ Presenting, the lazy man’s radio. An inexpensive and modern alternative to tod
 ### Schematic
 
 ### Circuit 
-![Circuit implementation](circuit.jpeg "Circuit implementation")
+![Circuit implementation](circuit.png "Circuit implementation")
 
 ### Architecture
 ##### Hardware
