@@ -8,9 +8,9 @@ Presenting, the lazy man’s radio. An inexpensive and modern alternative to tod
 
 ### [Demo Video](https://www.youtube.com/watch?v=JdD40mU05lw)
 
-### [Technical Discussion Video](https://www.youtube.com/watch?v=JdD40mU05lw)
+### [Technical Discussion Video](https://www.youtube.com/watch?v=DC6u2atP_KU)
 
-### [Slides](https://www.google.com)
+### [Slides](https://github.com/sujayt123/lazy-radio-station/blob/master/Slides.pdf)
 
 ### [Code](https://github.com/sujayt123/lazy-radio-station)
 
